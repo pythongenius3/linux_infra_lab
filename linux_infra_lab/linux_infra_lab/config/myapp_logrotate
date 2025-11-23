@@ -1,0 +1,11 @@
+/var/log/myapp/myapp_demo.log {
+    weekly
+    rotate 4
+    compress
+    missingok
+    notifempty
+    create 0640 root root
+    postrotate
+        systemctl reload myapp_demo.service >/dev/null 2>&1 || true
+    endscript
+}

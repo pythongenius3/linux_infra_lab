@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  web:
+    image: nginx:alpine
+    container_name: lab_web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx_default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - lab_net
+
+  whoami:
+    image: traefik/whoami
+    container_name: lab_whoami
+    ports:
+      - "8081:80"
+    networks:
+      - lab_net
+
+  db:
+    image: postgres:15-alpine
+    container_name: lab_db
+    environment:
+      POSTGRES_USER: labuser
+      POSTGRES_PASSWORD: labpassword
+      POSTGRES_DB: labdb
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - lab_net
+
+volumes:
+  db_data:
+
+networks:
+  lab_net:
+    driver: bridge
